@@ -1,4 +1,6 @@
-﻿namespace SharpArch.Specifications
+﻿using System.IO;
+
+namespace SharpArch.Specifications
 {
     using System;
 
@@ -10,7 +12,7 @@
     {
         public void OnAssemblyStart()
         {
-            RepositoryTestsHelper.InitializeNHibernateSession();
+            RepositoryTestsHelper.InitializeNHibernateSession(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Hibernate.cfg.xml"));
         }
 
         public void OnAssemblyComplete()

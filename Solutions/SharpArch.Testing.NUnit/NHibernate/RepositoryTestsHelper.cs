@@ -69,6 +69,13 @@
             return NHibernateSession.Init(new SimpleSessionStorage(), mappingAssemblies, autoPersistenceModel);
         }
 
+        public static Configuration InitializeNHibernateSession(string cfgFile)
+        {
+            var mappingAssemblies = GetMappingAssemblies();
+            var autoPersistenceModel = GetAutoPersistenceModel(mappingAssemblies);
+            return NHibernateSession.Init(new SimpleSessionStorage(), mappingAssemblies, autoPersistenceModel, cfgFile);
+        }
+
         public static void Shutdown()
         {
             NHibernateSession.CloseAllSessions();
