@@ -64,12 +64,6 @@ namespace SharpArch.Testing.NUnit.NHibernate
             new SchemaExport(cfg).Execute(false, true, false, connection, null);
         }
 
-        public static void InitializeNHibernateWith(ISessionFactory sessionFactory, string factoryKey)
-        {
-            NHibernateSession.InitStorage(new SimpleSessionStorage());
-            NHibernateSession.AddSessionFactory(factoryKey, sessionFactory);
-        }
-
         public static Configuration InitializeNHibernateSession()
         {
             var mappingAssemblies = GetMappingAssemblies();

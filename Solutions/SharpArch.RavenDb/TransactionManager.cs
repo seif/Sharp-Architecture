@@ -18,9 +18,20 @@ namespace SharpArch.RavenDb
             this.session = session;
         }
 
-        public IDisposable BeginTransaction()
+        public IDisposable BeginTransaction(string isolationLevel)
         {
-            return this.transaction ?? (this.transaction = new TransactionScope());
+            IsolationLevel transactionIsolationLevel;
+
+            if (!IsolationLevel.TryParse(isolationLevel, false, out transactionIsolationLevel))
+            {
+                throw new ArgumentException(
+                    string.Format("{0} is not a valid System.Transactions.IsolationLevel value", isolationLevel),
+                    "isolationLevel");
+            }
+
+            var transactionOptions = new TransactionOptions { IsolationLevel = transactionIsolationLevel };
+
+            return this.transaction ?? (this.transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions));
         }
 
         public void CommitTransaction()

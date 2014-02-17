@@ -9,9 +9,9 @@
     ///     transaction, rolling back a transaction, etc.
     /// </summary>
     /// <remarks>
-    ///     Note that outside of <see cref="T:IDbContext.CommitChanges"/>, you shouldn't have to
-    ///     invoke this object very often. If you're using on of the the <c>TransactionAttribute</c>
-    ///     atrributes provided by SharpArch on your controller actions, then the transaction
+    ///     Note that you shouldn't have to invoke this object very often.
+    ///     If you're using on of the the <c>TransactionAttribute</c> atrributes 
+    ///     provided by SharpArch on your controller actions, then the transaction
     ///     opening/committing will be taken care of for you.
     /// </remarks>
     public interface ITransactionManager
@@ -19,8 +19,9 @@
         /// <summary>
         ///     Begins the transaction.
         /// </summary>
+        /// <param name="isolationLevel"></param>
         /// <returns>The transaction instance.</returns>
-        IDisposable BeginTransaction();
+        IDisposable BeginTransaction(string isolationLevel);
         
         /// <summary>
         ///     Commits the transaction, saving all changes.

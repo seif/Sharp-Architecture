@@ -1,4 +1,6 @@
-﻿namespace SharpArch.Web.Http
+﻿using System.Data;
+
+namespace SharpArch.Web.Http
 {
     using System.Web.Http.Controllers;
     using System.Web.Http.Filters;
@@ -11,11 +13,23 @@
     /// </summary>
     public class TransactionAttribute : ActionFilterAttribute
     {
+        string _isolationLevel = "Unspecified";
+
         /// <summary>
-        /// Gets or sets the databse context
+        /// Gets or sets the database context
         /// The value should be injected by the filter provider.
         /// </summary>
         public ITransactionManager TransactionManager { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Isolation level to be used when creating the transaction.
+        /// Default is IslocationLevel.Unspecified.
+        /// </summary>
+        public string IsolationLevel
+        {
+            get { return _isolationLevel; }
+            set { _isolationLevel = value; }
+        }
 
         /// <summary>
         /// Occurs before the action method is invoked.
@@ -27,7 +41,7 @@
 
             base.OnActionExecuting(actionContext);
 
-            this.TransactionManager.BeginTransaction();
+            this.TransactionManager.BeginTransaction(this.IsolationLevel);
         }
 
         /// <summary>

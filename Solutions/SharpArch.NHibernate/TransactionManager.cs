@@ -1,4 +1,6 @@
-﻿namespace SharpArch.NHibernate
+﻿using System.Data;
+
+namespace SharpArch.NHibernate
 {
     using System;
 
@@ -6,6 +8,15 @@
     using Domain.PersistenceSupport;
     using global::NHibernate;
 
+    /// <summary>
+    /// Provides methods for managing NHibernate ADO.Net transactions, Beginning, Commiting, Rolling back.
+    /// </summary>
+    /// <remarks>
+    /// Note that you shouldn't have to invoke this object very often.
+    /// If you're using on of the the <c>TransactionAttribute</c> atrributes
+    /// provided by SharpArch on your controller actions, then the transaction
+    /// opening/committing will be taken care of for you.
+    /// </remarks>
     public class TransactionManager : ITransactionManager
     {
         public TransactionManager(string factoryKey)
@@ -25,28 +36,48 @@
             }
         }
 
-        public IDisposable BeginTransaction()
+        /// <summary>
+        /// Begins the transaction.
+        /// </summary>
+        /// <param name="isolationLevel"></param>
+        /// <returns>
+        /// The transaction instance.
+        /// </returns>
+        /// <exception cref="System.ArgumentException">isolationLevel</exception>
+        public IDisposable BeginTransaction(string isolationLevel)
         {
-            return this.Session.BeginTransaction();
+            IsolationLevel transactionIsolationLevel;
+
+            if (!IsolationLevel.TryParse(isolationLevel, false, out transactionIsolationLevel))
+            {
+                throw new ArgumentException(
+                    string.Format("{0} is not a valid System.Data.IsolationLevel value", isolationLevel),
+                    "isolationLevel");
+            }
+
+            return this.Session.BeginTransaction(transactionIsolationLevel);
         }
 
         /// <summary>
-        ///     This isn't specific to any one DAO and flushes everything that has been 
-        ///     changed since the last commit.
+        /// Commits the transaction, saving all changes.
         /// </summary>
-        public void CommitChanges()
-        {
-            this.Session.Flush();
-        }
-
         public void CommitTransaction()
         {
-            this.Session.Transaction.Commit();
+            if (this.Session.Transaction != null && this.Session.Transaction.IsActive)
+            {
+                this.Session.Transaction.Commit();
+            }
         }
 
+        /// <summary>
+        /// Rolls the transaction back, discarding any changes.
+        /// </summary>
         public void RollbackTransaction()
         {
-            this.Session.Transaction.Rollback();
+            if (this.Session.Transaction != null && this.Session.Transaction.IsActive)
+            {
+                this.Session.Transaction.Rollback();
+            }
         }
     }
 }
