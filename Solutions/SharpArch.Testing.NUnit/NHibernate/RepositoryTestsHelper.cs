@@ -1,4 +1,6 @@
-﻿namespace SharpArch.Testing.NUnit.NHibernate
+﻿using NHibernate;
+
+namespace SharpArch.Testing.NUnit.NHibernate
 {
     using System;
     using System.Configuration;
@@ -60,6 +62,12 @@
             var cfg = InitializeNHibernateSession();
             var connection = NHibernateSession.Current.Connection;
             new SchemaExport(cfg).Execute(false, true, false, connection, null);
+        }
+
+        public static void InitializeNHibernateWith(ISessionFactory sessionFactory, string factoryKey)
+        {
+            NHibernateSession.InitStorage(new SimpleSessionStorage());
+            NHibernateSession.AddSessionFactory(factoryKey, sessionFactory);
         }
 
         public static Configuration InitializeNHibernateSession()

@@ -1,3 +1,12 @@
+==============================
+S#arp Architecture 3.0.0-alpha
+==============================
+
+Breaking changes:
+* Overload of NHibernateSession.AddConfiguration that takes 
+  (string factoryKey, ISessionFactory sessionFactory, Configuration cfg, string validatorCfgFile)
+  renamed to AddSessionFactory with unused parameters and return value removed.
+
 
 ========================
 S#arp Architecture 2.1.0

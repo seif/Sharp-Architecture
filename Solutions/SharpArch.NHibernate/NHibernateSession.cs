@@ -104,7 +104,8 @@
                 config = configCache.LoadConfiguration(factoryKey, cfgFile, mappingAssemblies);
                 if (config != null)
                 {
-                    return AddConfiguration(factoryKey, config.BuildSessionFactory(), config, validatorCfgFile);
+                    AddSessionFactory(factoryKey, config.BuildSessionFactory());
+                    return config;
                 }
             }
 
@@ -135,19 +136,19 @@
             var sessionFactory = CreateSessionFactoryFor(
                 mappingAssemblies, autoPersistenceModel, cfg, persistenceConfigurer);
 
-            return AddConfiguration(factoryKey, sessionFactory, cfg, validatorCfgFile);
+            AddSessionFactory(factoryKey, sessionFactory);
+
+            return cfg;
         }
 
-        public static Configuration AddConfiguration(
-            string factoryKey, ISessionFactory sessionFactory, Configuration cfg, string validatorCfgFile)
+        public static void AddSessionFactory(
+            string factoryKey, ISessionFactory sessionFactory)
         {
             Check.Require(
                 !SessionFactories.ContainsKey(factoryKey), 
                 "A session factory has already been configured with the key of " + factoryKey);
 
             SessionFactories.Add(factoryKey, sessionFactory);
-
-            return cfg;
         }
 
         /// <summary>
