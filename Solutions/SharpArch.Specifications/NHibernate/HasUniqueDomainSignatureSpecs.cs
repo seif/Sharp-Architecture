@@ -162,7 +162,7 @@ namespace SharpArch.Specifications.NHibernate
 
             private Establish context = () =>
             {
-                song = new Song() { SongTitle = "Souvenirs" };
+                song = new Song() { SongTitle = "The four horsemen" };
             };
 
             Because of = () => result = song.IsValid();
